@@ -1,1 +1,68 @@
 @import "tailwindcss";
+
+@theme {
+  --color-archery-900: #1a0a2e;
+  --color-archery-800: #2d1b4e;
+  --color-archery-700: #3d2b6e;
+  --color-archery-600: #5b3f8f;
+  --color-archery-500: #7c5cbf;
+  --color-archery-400: #9d7edf;
+  --color-archery-300: #bea0ff;
+  --color-archery-200: #d4c0ff;
+  --color-archery-100: #ebe0ff;
+  --color-gold-500: #f5a623;
+  --color-gold-400: #ffc857;
+  --color-gold-300: #ffe0a0;
+  --color-red-500: #e74c3c;
+  --color-green-500: #2ecc71;
+  --color-blue-500: #3498db;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+  min-height: 100vh;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glow-border {
+  box-shadow: 0 0 15px rgba(124, 92, 191, 0.3), inset 0 0 15px rgba(124, 92, 191, 0.1);
+}
+
+.target-ring {
+  border-radius: 50%;
+  border: 3px solid;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
