@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, RadarChart, Radar, PolarGrid,
@@ -29,26 +28,97 @@ export default function AnalyticsView() {
     { id: 'area', label: 'Регионы', icon: <MapPin size={16} /> },
   ];
 
+  const renderChart = () => {
+    switch (activeChart) {
+      case 'line':
+        return (
+          <LineChart data={scoreDistribution}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+            <XAxis dataKey="date" stroke="#9d7edf" fontSize={12} />
+            <YAxis stroke="#9d7edf" fontSize={12} domain={[630, 710]} />
+            <Tooltip
+              contentStyle={{ background: 'rgba(26, 10, 46, 0.9)', border: '1px solid rgba(124, 92, 191, 0.3)', borderRadius: '8px' }}
+              labelStyle={{ color: '#fff' }}
+              itemStyle={{ color: '#f5a623' }}
+            />
+            <Line
+              type="monotone"
+              dataKey="value"
+              stroke="#f5a623"
+              strokeWidth={3}
+              dot={{ fill: '#f5a623', strokeWidth: 2, r: 4 }}
+              activeDot={{ r: 6, fill: '#ffc857' }}
+            />
+          </LineChart>
+        );
+      case 'bar':
+        return (
+          <BarChart data={categoryData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+            <XAxis dataKey="name" stroke="#9d7edf" fontSize={11} />
+            <YAxis stroke="#9d7edf" fontSize={12} />
+            <Tooltip
+              contentStyle={{ background: 'rgba(26, 10, 46, 0.9)', border: '1px solid rgba(124, 92, 191, 0.3)', borderRadius: '8px' }}
+              labelStyle={{ color: '#fff' }}
+            />
+            <Legend wrapperStyle={{ color: '#bea0ff' }} />
+            <Bar dataKey="athletes" fill="#7c5cbf" name="Спортсменов" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="gold" fill="#f5a623" name="Золото" radius={[4, 4, 0, 0]} />
+          </BarChart>
+        );
+      case 'radar':
+        return (
+          <RadarChart data={radarData}>
+            <PolarGrid stroke="rgba(255,255,255,0.1)" />
+            <PolarAngleAxis dataKey="metric" stroke="#9d7edf" fontSize={12} />
+            <PolarRadiusAxis stroke="rgba(255,255,255,0.2)" fontSize={10} />
+            <Radar
+              name="Профиль"
+              dataKey="value"
+              stroke="#f5a623"
+              fill="#f5a623"
+              fillOpacity={0.3}
+              strokeWidth={2}
+            />
+            <Tooltip
+              contentStyle={{ background: 'rgba(26, 10, 46, 0.9)', border: '1px solid rgba(124, 92, 191, 0.3)', borderRadius: '8px' }}
+              labelStyle={{ color: '#fff' }}
+            />
+          </RadarChart>
+        );
+      case 'area':
+        return (
+          <AreaChart data={regionStats}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+            <XAxis dataKey="region" stroke="#9d7edf" fontSize={11} />
+            <YAxis stroke="#9d7edf" fontSize={12} />
+            <Tooltip
+              contentStyle={{ background: 'rgba(26, 10, 46, 0.9)', border: '1px solid rgba(124, 92, 191, 0.3)', borderRadius: '8px' }}
+              labelStyle={{ color: '#fff' }}
+            />
+            <Legend wrapperStyle={{ color: '#bea0ff' }} />
+            <Area type="monotone" dataKey="gold" stackId="1" stroke="#f5a623" fill="#f5a623" fillOpacity={0.6} name="Золото" />
+            <Area type="monotone" dataKey="silver" stackId="1" stroke="#9d7edf" fill="#9d7edf" fillOpacity={0.6} name="Серебро" />
+            <Area type="monotone" dataKey="bronze" stackId="1" stroke="#e67e22" fill="#e67e22" fillOpacity={0.6} name="Бронза" />
+          </AreaChart>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-fadeIn">
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
+      <div>
         <h2 className="text-3xl font-bold text-white mb-2">Аналитика</h2>
         <p className="text-archery-300">
           Визуализация ключевых метрик на основе данных соревнований
         </p>
-      </motion.div>
+      </div>
 
       {/* Chart selector */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="flex flex-wrap gap-2"
-      >
+      <div className="flex flex-wrap gap-2">
         {chartButtons.map((btn) => (
           <button
             key={btn.id}
@@ -63,95 +133,21 @@ export default function AnalyticsView() {
             {btn.label}
           </button>
         ))}
-      </motion.div>
+      </div>
 
       {/* Main chart */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="glass-card rounded-2xl p-6"
-      >
+      <div className="glass-card rounded-2xl p-6">
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
-            {activeChart === 'line' ? (
-              <LineChart data={scoreDistribution}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="date" stroke="#9d7edf" fontSize={12} />
-                <YAxis stroke="#9d7edf" fontSize={12} domain={[630, 710]} />
-                <Tooltip
-                  contentStyle={{ background: 'rgba(26, 10, 46, 0.9)', border: '1px solid rgba(124, 92, 191, 0.3)', borderRadius: '8px' }}
-                  labelStyle={{ color: '#fff' }}
-                  itemStyle={{ color: '#f5a623' }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  stroke="#f5a623"
-                  strokeWidth={3}
-                  dot={{ fill: '#f5a623', strokeWidth: 2, r: 4 }}
-                  activeDot={{ r: 6, fill: '#ffc857' }}
-                />
-              </LineChart>
-            ) : activeChart === 'bar' ? (
-              <BarChart data={categoryData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="name" stroke="#9d7edf" fontSize={11} />
-                <YAxis stroke="#9d7edf" fontSize={12} />
-                <Tooltip
-                  contentStyle={{ background: 'rgba(26, 10, 46, 0.9)', border: '1px solid rgba(124, 92, 191, 0.3)', borderRadius: '8px' }}
-                  labelStyle={{ color: '#fff' }}
-                />
-                <Legend wrapperStyle={{ color: '#bea0ff' }} />
-                <Bar dataKey="athletes" fill="#7c5cbf" name="Спортсменов" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="gold" fill="#f5a623" name="Золото" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            ) : activeChart === 'radar' ? (
-              <RadarChart data={radarData}>
-                <PolarGrid stroke="rgba(255,255,255,0.1)" />
-                <PolarAngleAxis dataKey="metric" stroke="#9d7edf" fontSize={12} />
-                <PolarRadiusAxis stroke="rgba(255,255,255,0.2)" fontSize={10} />
-                <Radar
-                  name="Профиль"
-                  dataKey="value"
-                  stroke="#f5a623"
-                  fill="#f5a623"
-                  fillOpacity={0.3}
-                  strokeWidth={2}
-                />
-                <Tooltip
-                  contentStyle={{ background: 'rgba(26, 10, 46, 0.9)', border: '1px solid rgba(124, 92, 191, 0.3)', borderRadius: '8px' }}
-                  labelStyle={{ color: '#fff' }}
-                />
-              </RadarChart>
-            ) : (
-              <AreaChart data={regionStats}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="region" stroke="#9d7edf" fontSize={11} />
-                <YAxis stroke="#9d7edf" fontSize={12} />
-                <Tooltip
-                  contentStyle={{ background: 'rgba(26, 10, 46, 0.9)', border: '1px solid rgba(124, 92, 191, 0.3)', borderRadius: '8px' }}
-                  labelStyle={{ color: '#fff' }}
-                />
-                <Legend wrapperStyle={{ color: '#bea0ff' }} />
-                <Area type="monotone" dataKey="gold" stackId="1" stroke="#f5a623" fill="#f5a623" fillOpacity={0.6} name="Золото" />
-                <Area type="monotone" dataKey="silver" stackId="1" stroke="#9d7edf" fill="#9d7edf" fillOpacity={0.6} name="Серебро" />
-                <Area type="monotone" dataKey="bronze" stackId="1" stroke="#e67e22" fill="#e67e22" fillOpacity={0.6} name="Бронза" />
-              </AreaChart>
-            )}
+            {renderChart() ?? <LineChart data={scoreDistribution}><Line dataKey="value" /></LineChart>}
           </ResponsiveContainer>
         </div>
-      </motion.div>
+      </div>
 
       {/* Stats grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Top performers */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="glass-card rounded-xl p-5"
-        >
+        <div className="glass-card rounded-xl p-5">
           <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
             <Award size={18} className="text-gold-500" />
             Топ-5 по среднему баллу
@@ -183,15 +179,10 @@ export default function AnalyticsView() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* Regional distribution */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="glass-card rounded-xl p-5"
-        >
+        <div className="glass-card rounded-xl p-5">
           <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
             <MapPin size={18} className="text-blue-400" />
             Регионы
@@ -205,22 +196,17 @@ export default function AnalyticsView() {
                 </div>
                 <div className="w-full h-2 rounded-full bg-white/10">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-archery-400 to-archery-500"
+                    className="h-full rounded-full bg-gradient-to-r from-archery-400 to-archery-500 transition-all duration-500"
                     style={{ width: `${(region.total / 62) * 100}%` }}
                   />
                 </div>
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* Data insights */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="glass-card rounded-xl p-5"
-        >
+        <div className="glass-card rounded-xl p-5">
           <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
             <TrendingUp size={18} className="text-green-400" />
             Инсайты
@@ -239,16 +225,11 @@ export default function AnalyticsView() {
               <span className="text-gold-400 font-medium">⚡ Рекомендация:</span> Увеличить объём скоростной работы
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Data volume stats */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-        className="glass-card rounded-xl p-5"
-      >
+      <div className="glass-card rounded-xl p-5">
         <h4 className="text-white font-semibold mb-4">Объём обработанных данных</h4>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {[
@@ -265,7 +246,7 @@ export default function AnalyticsView() {
             </div>
           ))}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

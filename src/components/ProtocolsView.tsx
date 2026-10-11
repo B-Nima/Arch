@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { competitions, athletes } from '../data';
 import {
   Search, Filter, Trophy, MapPin, Calendar, Users,
@@ -31,13 +30,9 @@ export default function ProtocolsView() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-fadeIn">
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
-      >
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold text-white mb-1">Протоколы соревнований</h2>
           <p className="text-archery-300 text-sm">
@@ -56,25 +51,18 @@ export default function ProtocolsView() {
           <ExternalLink size={14} />
           Открыть источник
         </a>
-      </motion.div>
+      </div>
 
       {/* Competitions */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
+      <div>
         <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
           <Trophy size={18} className="text-gold-500" />
           Соревнования
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {competitions.map((comp, index) => (
-            <motion.div
+          {competitions.map((comp) => (
+            <div
               key={comp.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
               className="glass-card rounded-xl p-5 hover:border-archery-400/30 transition-all group"
             >
               <div className="flex items-center justify-between mb-3">
@@ -100,17 +88,13 @@ export default function ProtocolsView() {
                   <span>{comp.participants} участников</span>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
-      </motion.div>
+      </div>
 
       {/* Athletes table */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-      >
+      <div>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white flex items-center gap-2">
             <Users size={18} className="text-archery-400" />
@@ -121,7 +105,7 @@ export default function ProtocolsView() {
             className="flex items-center gap-2 text-sm text-archery-300 hover:text-white transition-colors"
           >
             {showAthletes ? 'Свернуть' : 'Развернуть'}
-            <ChevronDown size={16} className={`transition-transform ${showAthletes ? 'rotate-180' : ''}`} />
+            <ChevronDown size={16} className={`transition-transform duration-300 ${showAthletes ? 'rotate-180' : ''}`} />
           </button>
         </div>
 
@@ -151,62 +135,50 @@ export default function ProtocolsView() {
           </div>
         </div>
 
-        <AnimatePresence>
-          {showAthletes && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden"
-            >
-              <div className="glass-card rounded-xl overflow-hidden">
-                <div className="overflow-x-auto scrollbar-hide">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-white/10">
-                        <th className="text-left px-4 py-3 text-archery-300 font-medium">Спортсмен</th>
-                        <th className="text-left px-4 py-3 text-archery-300 font-medium">Регион</th>
-                        <th className="text-left px-4 py-3 text-archery-300 font-medium">Категория</th>
-                        <th className="text-left px-4 py-3 text-archery-300 font-medium">Разряд</th>
-                        <th className="text-center px-4 py-3 text-archery-300 font-medium">Ср. балл</th>
-                        <th className="text-center px-4 py-3 text-archery-300 font-medium">Лучший</th>
-                        <th className="text-center px-4 py-3 text-archery-300 font-medium">Тренд</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredAthletes.map((athlete, index) => (
-                        <motion.tr
-                          key={athlete.id}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.03 }}
-                          className="border-b border-white/5 hover:bg-white/5 transition-colors"
-                        >
-                          <td className="px-4 py-3 text-white font-medium">{athlete.name}</td>
-                          <td className="px-4 py-3 text-archery-300">{athlete.region}</td>
-                          <td className="px-4 py-3">
-                            <span className="px-2 py-1 rounded-full text-xs bg-archery-600/30 text-archery-200">
-                              {athlete.category === 'Блок' ? 'Блочный' : 'Олимпийский'}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 text-gold-400 font-medium">{athlete.rank}</td>
-                          <td className="px-4 py-3 text-center text-white">{athlete.avgScore}</td>
-                          <td className="px-4 py-3 text-center text-gold-400">{athlete.bestScore}</td>
-                          <td className="px-4 py-3 text-center">
-                            {athlete.trend === 'up' && <TrendingUp size={16} className="text-green-400 mx-auto" />}
-                            {athlete.trend === 'down' && <TrendingDown size={16} className="text-red-400 mx-auto" />}
-                            {athlete.trend === 'stable' && <Minus size={16} className="text-yellow-400 mx-auto" />}
-                          </td>
-                        </motion.tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
+        {showAthletes && (
+          <div className="glass-card rounded-xl overflow-hidden transition-all duration-300">
+            <div className="overflow-x-auto scrollbar-hide">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-white/10">
+                    <th className="text-left px-4 py-3 text-archery-300 font-medium">Спортсмен</th>
+                    <th className="text-left px-4 py-3 text-archery-300 font-medium">Регион</th>
+                    <th className="text-left px-4 py-3 text-archery-300 font-medium">Категория</th>
+                    <th className="text-left px-4 py-3 text-archery-300 font-medium">Разряд</th>
+                    <th className="text-center px-4 py-3 text-archery-300 font-medium">Ср. балл</th>
+                    <th className="text-center px-4 py-3 text-archery-300 font-medium">Лучший</th>
+                    <th className="text-center px-4 py-3 text-archery-300 font-medium">Тренд</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredAthletes.map((athlete) => (
+                    <tr
+                      key={athlete.id}
+                      className="border-b border-white/5 hover:bg-white/5 transition-colors"
+                    >
+                      <td className="px-4 py-3 text-white font-medium">{athlete.name}</td>
+                      <td className="px-4 py-3 text-archery-300">{athlete.region}</td>
+                      <td className="px-4 py-3">
+                        <span className="px-2 py-1 rounded-full text-xs bg-archery-600/30 text-archery-200">
+                          {athlete.category === 'Блок' ? 'Блочный' : 'Олимпийский'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-gold-400 font-medium">{athlete.rank}</td>
+                      <td className="px-4 py-3 text-center text-white">{athlete.avgScore}</td>
+                      <td className="px-4 py-3 text-center text-gold-400">{athlete.bestScore}</td>
+                      <td className="px-4 py-3 text-center">
+                        {athlete.trend === 'up' && <TrendingUp size={16} className="text-green-400 mx-auto" />}
+                        {athlete.trend === 'down' && <TrendingDown size={16} className="text-red-400 mx-auto" />}
+                        {athlete.trend === 'stable' && <Minus size={16} className="text-yellow-400 mx-auto" />}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

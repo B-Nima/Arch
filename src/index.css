@@ -34,11 +34,6 @@ body {
   box-shadow: 0 0 15px rgba(124, 92, 191, 0.3), inset 0 0 15px rgba(124, 92, 191, 0.1);
 }
 
-.target-ring {
-  border-radius: 50%;
-  border: 3px solid;
-}
-
 @keyframes pulse-ring {
   0% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.05); opacity: 0.7; }
@@ -49,13 +44,13 @@ body {
   animation: pulse-ring 2s ease-in-out infinite;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-out forwards;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
@@ -65,4 +60,15 @@ body {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Recharts tooltip fix */
+.recharts-tooltip-wrapper {
+  z-index: 100 !important;
+}
+
+/* Select option styling for dark background */
+select option {
+  background: #2d1b4e;
+  color: white;
 }

@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { dataPipelines } from '../data';
 import {
   Database, ArrowRight, Globe, Cpu, HardDrive,
@@ -54,29 +53,23 @@ const architectureLayers = [
 
 export default function ArchitectureView() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-fadeIn">
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center"
-      >
+      <div className="text-center">
         <h2 className="text-3xl font-bold text-white mb-2">Архитектура системы</h2>
         <p className="text-archery-300 max-w-2xl mx-auto">
           Многоуровневая платформа сбора и анализа данных соревнований по стрельбе из лука.
           Источник первичных данных — results.archery.ru
         </p>
-      </motion.div>
+      </div>
 
       {/* Architecture diagram */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {architectureLayers.map((layer, index) => (
-          <motion.div
+          <div
             key={layer.title}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="glass-card rounded-2xl p-5 glow-border relative overflow-hidden group hover:scale-105 transition-transform duration-300"
+            className="glass-card rounded-2xl p-5 glow-border relative overflow-hidden group hover:scale-105 transition-all duration-300"
+            style={{ animationDelay: `${index * 100}ms` }}
           >
             <div className={`absolute inset-0 bg-gradient-to-br ${layer.color} opacity-5 group-hover:opacity-10 transition-opacity`} />
             <div className="relative z-10">
@@ -98,27 +91,20 @@ export default function ArchitectureView() {
                 <ArrowRight size={20} className="text-archery-400" />
               </div>
             )}
-          </motion.div>
+          </div>
         ))}
       </div>
 
       {/* Data pipelines */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-      >
+      <div>
         <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
           <RefreshCw size={20} className="text-archery-400" />
           Пайплайны данных
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {dataPipelines.map((pipeline, index) => (
-            <motion.div
+          {dataPipelines.map((pipeline) => (
+            <div
               key={pipeline.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6 + index * 0.1 }}
               className="glass-card rounded-xl p-4 hover:border-archery-400/30 transition-all"
             >
               <div className="flex items-center justify-between mb-3">
@@ -147,18 +133,13 @@ export default function ArchitectureView() {
                 <span className="text-xs text-archery-400">Записей обработано</span>
                 <span className="text-sm font-mono text-gold-400">{pipeline.recordsProcessed.toLocaleString()}</span>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
-      </motion.div>
+      </div>
 
       {/* Tech stack */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
-        className="glass-card rounded-2xl p-6"
-      >
+      <div className="glass-card rounded-2xl p-6">
         <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
           <Shield size={20} className="text-archery-400" />
           Технологический стек
@@ -180,7 +161,7 @@ export default function ArchitectureView() {
             </div>
           ))}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

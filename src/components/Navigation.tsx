@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { TabType } from '../types';
 import {
   Target, Database, Users, BookOpen, BarChart3,
@@ -29,7 +28,7 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
           {/* Logo */}
           <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="w-10 h-10 rounded-full border-2 border-gold-500 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-full border-2 border-gold-500 flex items-center justify-center animate-pulse-ring">
                 <div className="w-7 h-7 rounded-full border-2 border-red-500 flex items-center justify-center">
                   <div className="w-4 h-4 rounded-full border-2 border-blue-500 flex items-center justify-center">
                     <div className="w-1.5 h-1.5 rounded-full bg-gold-500" />
@@ -86,33 +85,26 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
       </div>
 
       {/* Mobile menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="md:hidden overflow-hidden border-t border-white/10"
-          >
-            <div className="px-4 py-3 space-y-1">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => { setActiveTab(tab.id); setMobileOpen(false); }}
-                  className={`flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-all ${
-                    activeTab === tab.id
-                      ? 'bg-archery-600/50 text-white'
-                      : 'text-archery-300 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  {tab.icon}
-                  <span>{tab.label}</span>
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {mobileOpen && (
+        <div className="md:hidden border-t border-white/10 transition-all duration-300">
+          <div className="px-4 py-3 space-y-1">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => { setActiveTab(tab.id); setMobileOpen(false); }}
+                className={`flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                  activeTab === tab.id
+                    ? 'bg-archery-600/50 text-white'
+                    : 'text-archery-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                {tab.icon}
+                <span>{tab.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
